@@ -10,7 +10,7 @@ dotenv.config();
 
 //server running code
 app.listen(3000, () => {
-  console.log("server is running sucessfully");
+  console.log("server is running sucessfully at port 3000");
 });
 
 //Database connection file
