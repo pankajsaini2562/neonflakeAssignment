@@ -6,9 +6,9 @@ import cors from "cors";
 import databaseConnection from "./config/database.js";
 import { v2 as cloudinary } from "cloudinary";
 databaseConnection();
+const app = express();
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
-const app = express();
 app.use(express.json());
 app.use(cors());
 
