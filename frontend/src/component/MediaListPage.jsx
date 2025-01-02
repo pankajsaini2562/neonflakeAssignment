@@ -10,7 +10,7 @@ const MediaListPage = () => {
       try {
         const response = await axios.get("http://localhost:3000/media");
         console.log(response);
-        setMediaList(response.data);
+        setMediaList(response.data.mediaList);
       } catch (error) {
         console.error("Error fetching media:", error);
       }

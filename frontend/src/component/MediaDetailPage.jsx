@@ -10,7 +10,9 @@ const MediaDetailPage = () => {
     const fetchMedia = async () => {
       try {
         const response = await axios.get("http://localhost:3000/media");
-        const selectedMedia = response.data.find((item) => item._id === id);
+        const selectedMedia = response.data.mediaList.find(
+          (item) => item._id === id
+        );
         setMedia(selectedMedia);
       } catch (error) {
         console.error("Error fetching media:", error);
