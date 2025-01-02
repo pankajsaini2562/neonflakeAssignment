@@ -8,12 +8,11 @@ import { v2 as cloudinary } from "cloudinary";
 databaseConnection();
 const app = express();
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
 app.use(express.json());
 app.use(cors());
 
 app.listen(3000, () => {
-  console.log("server is running succesfully");
+  console.log("server is running succesfully at 3000!!");
 });
 
 // MongoDB Schema
@@ -77,11 +76,6 @@ app.post(
   }
 );
 
-//join the path routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
-
 // Get Media API
 app.get("/media", async (req, res) => {
   try {
@@ -92,13 +86,9 @@ app.get("/media", async (req, res) => {
     res.status(500).json({ message: "Error fetching media" });
   }
 });
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-// Get Video by ID Endpoint
-app.get("/media/:id", async (req, res) => {
-  try {
-    const video = await Media.findById(req.params.id);
-    res.status(200).json(video);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching video", error });
-  }
+//join the path routes
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 });
