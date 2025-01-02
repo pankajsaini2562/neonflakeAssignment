@@ -18,8 +18,8 @@ app.listen(3000, () => {
 
 // MongoDB Schema
 const mediaSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  title: { type: String, required: true, maxlength: 50 },
+  description: { type: String, required: true, maxlength: 200 },
   thumbnailUrl: { type: String, required: true },
   videoUrl: { type: String, required: true },
 });
@@ -32,8 +32,9 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-// Multer for file handling
-const upload = multer({ dest: "uploads/" });
+// Multer Setup
+const storage = multer.diskStorage({});
+const upload = multer({ storage });
 
 // Upload Media API
 app.post(
@@ -47,7 +48,7 @@ app.post(
       const thumbnailResult = await cloudinary.uploader.upload(
         req.files.thumbnail[0].path,
         {
-          folder: "media/thumbnails",
+          resource_type: "image",
         }
       );
 
@@ -55,7 +56,6 @@ app.post(
       const videoResult = await cloudinary.uploader.upload(
         req.files.video[0].path,
         {
-          folder: "media/videos",
           resource_type: "video",
         }
       );
@@ -77,7 +77,7 @@ app.post(
   }
 );
 
-//join the pathroutes
+//join the path routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
@@ -86,9 +86,19 @@ app.get("*", (req, res) => {
 app.get("/media", async (req, res) => {
   try {
     const mediaList = await Media.find();
-    res.status(200).json(mediaList);
+    res.status(200).json({ mediaList });
   } catch (error) {
     console.error("Error fetching media:", error);
     res.status(500).json({ message: "Error fetching media" });
+  }
+});
+
+// Get Video by ID Endpoint
+app.get("/media/:id", async (req, res) => {
+  try {
+    const video = await Media.findById(req.params.id);
+    res.status(200).json(video);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching video", error });
   }
 });
